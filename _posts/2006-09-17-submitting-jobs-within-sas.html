@@ -1,0 +1,28 @@
+---
+layout: post
+title: Submitting Jobs within SAS
+date: '2006-09-17T15:14:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- misc languages
+modified_time: '2007-04-03T12:10:25.367-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-1585594335116887307
+blogger_orig_url: http://neovintage.blogspot.com/2006/09/submitting-jobs-within-sas.html
+---
+
+I ran across this in the mailing list online. I found it to be pretty helpful. Since all of my work is done on a mainframe I can attest to it working there but for the other environment, windows, unix, etc, you may need to help me out on that one.
+
+<code>
+FILENAME INJCL 'PATH.TO.JOB' DISP=SHR;
+FILENAME OUTRDR SYSOUT=A PGM=INTRDR RECFM=FB LRECL=80;
+DATA _NULL_;
+INFILE INJCL(JOBNAME);
+FILE OUTRDR NOPRINT NOTITLES;
+INPUT;
+PUT _INFILE_;
+RUN;
+</code>
+
+One thing to note.  We are not really "submitting" the job, but we basically are adding it to the internal reader which then adds the job to the queue.  So be careful when referring to this section of code as "submitting" a job.
+
+For the site that I work at, I've created a macro that I've compiled that will perform this function.

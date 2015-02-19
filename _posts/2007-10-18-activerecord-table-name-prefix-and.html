@@ -1,0 +1,65 @@
+---
+layout: post
+title: ActiveRecord Table Name Prefix and Suffix Quirks
+date: '2007-10-18T10:50:00.002-07:00'
+author: Rimas Silkaitis
+tags:
+- activerecord
+modified_time: '2008-11-11T17:44:00.289-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-1861705413121991739
+blogger_orig_url: http://neovintage.blogspot.com/2007/10/activerecord-table-name-prefix-and.html
+---
+
+I've just started working with a legacy database schema over the last week when I noticed some quirks in ActiveRecord table naming.  Essentially, when you set the prefix in ActiveRecord::Base and then try to set a table name in the model, the model does not pick up the table_name_prefix when your classes are created.  Lets walk through an example. 
+
+I've setup two different classes in a test file that both inherit ActiveRecord.  Keep in mind that when we create these classes the default behavior of ActiveRecord is to pluralize the table name.  The Project class has its table name overridden with the set_table_name method and the Task class was left to the default behavior.  
+
+Initial Setup in test.rb:<pre name="code" class="ruby">ActiveRecord::Base.table_name_prefix = 'myprefix.'
+
+class Project < ActiveRecord::Base
+  set_table_name 'project'
+end
+
+class Task < ActiveRecord::Base
+end
+</pre>
+In IRB:
+<pre name="code" class="ruby">>> require 'test'
+=> true
+>> Project.table_name
+=> "project"
+>> Task.table_name
+=> "myprefix.tasks"</pre>
+
+Very interesting behavior indeed.  This caused alot of problems for me because I required the use of a table name prefix in my database, but all of my table names really don't follow the ActiveRecord mantra.  I had a couple ways of fixing this predicament.  
+
+1.  Pass a block to set_table_name in the model
+<pre name="code" class="ruby">class Project < ActiveRecord::Base
+  set_table_name do 
+    "#{table_name_prefix}project"
+  end</pre>
+This method would work, but in the event that I have to do this for multiple tables, it can get quite cumbersome. Lets look for another option....
+
+2.  Patch ActiveRecord
+<pre name="code" class="ruby">line 765 in activerecord/lib/active_record/base.rb....
+Original:
+  def set_table_name(value = nil, &block)
+    define_attr_method :table_name, value, &block
+  end
+New:
+  def set_table_name(value = nil, &block)
+    define_attr_method :table_name, "#{table_name_prefix}#{value}#{table_name_suffix}", &block
+  end </pre>
+Now this approach works a little bit better.  Now I can set the table names in the models without worrying about setting up blocks or doing some other magic.  Yet, I'm a little uncomfortable patching base.rb in my ActiveRecord installation for the typical reasons.  
+
+3.  Override set_table_name in my test.rb file
+<pre name="code" class="ruby">module ActiveRecord
+  class Base
+    def self.set_table_name(value = nil, &block)
+      define_attr_method :table_name, "#{table_name_prefix}#{value}#{table_name_suffix}", &block
+    end
+  end
+end</pre>
+This approach is probably the best.  At least this way if there are any changes to activerecord in the future, I wont forget what I did to get my table prefixing to work.
+
+SIDEBAR: define_attr_method creates an attribute method.  A new class method will be created with the given name.  In this post, the class method name is table_name.

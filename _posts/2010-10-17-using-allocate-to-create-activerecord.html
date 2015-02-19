@@ -1,0 +1,33 @@
+---
+layout: post
+title: Using Allocate to Create ActiveRecord Objects When Stubbing find_by_sql
+date: '2010-10-17T15:08:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+- activerecord
+modified_time: '2011-12-17T09:11:57.100-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-5851578054931695197
+blogger_orig_url: http://neovintage.blogspot.com/2010/10/using-allocate-to-create-activerecord.html
+---
+
+<p><tt>find_by_sql.</tt>  What a method.  I love the flexibility it gives me when I need to get information from my database with as little fuss as possible.  Yet when I want to stub find_by_sql and return real objects in my rspec tests, a little part of me gets frustrated.  The real pain comes in when you want to have an object with attributes that aren't part of the original class and typically you're going to run into that when you use <tt>find_by_sql</tt>.</p><p>In my particular use case, I had two different tables, the first was a <tt>Shop</tt> table and the second was a <tt>Job</tt> table.  In terms of the association, a Shop could have many jobs.  The <tt>find_by_sql</tt> method was aggregating data from the two tables and creating each instance of the result as Job object.  So it looked something like this:</p><br />
+<script src="https://gist.github.com/1490769.js?file=example.rb"></script><br />
+<br />
+<p>I'm sure that you're thinking to yourself that I could have just created some factories or fixtures and then had my tests just query the database for the records.  That probably would have been the easy route, but I was wondering if I could pull this off without the database call. So how do we do this?</p><br />
+<p>First, we need to understand how ActiveRecord actually creates new objects.  The <a href="http://paydrotalks.com/posts/89-rubys-classallocate-and-activerecordbasefind">post</a> from Peter Bui is a great first step in explaining what goes on when ActiveRecord queries a database and creates a new object. The important thing to note in his article is Ruby's ability to create an object without calling the initialize method via <a href="http://ruby-doc.org/ruby-1.9/classes/Class.html#M001156"><tt>allocate</tt></a>.</p><br />
+<p>From there it was time to look at the core ActiveRecord code to see what is going on.  Just to note, since Peter's article, ActiveRecord::Base has changed a little bit.  First I started with the code for <a href="http://github.com/rails/rails/blob/master/activerecord/lib/active_record/base.rb#L429-453">find_by_sql</a>:</p><br />
+<script src="https://gist.github.com/1490769.js?file=find_by_sql.rb"></script><br />
+<br />
+<p>You can see in this piece of code that ActiveRecord is hitting the database with your custom SQL and then for each result creating a new instance. Now let's see how that <a href="http://github.com/rails/rails/blob/master/activerecord/lib/active_record/base.rb#L883-890">instance is created</a>:</p><br />
+<script src="https://gist.github.com/1490769.js?file=init.rb"></script><br />
+<br />
+<p>The first line of code is looking for the appropriate class to use to create the object via <tt>find_sti_class</tt>.  Then it allocates an object based upon the class name.  The next line is really where the meat is.  <a href="http://github.com/rails/rails/blob/master/activerecord/lib/active_record/base.rb#L1417-1433"><tt>init_with</tt></a> will actually then create the object with the attributes that you specify. Sweet! I think we struck gold.</p><br />
+<p>Now that we know about the <tt>init_with</tt> and <tt>allocate</tt> methods we can now create real objects to use in our tests if we need attributes outside of what the object provides.  So in the example that I provided above, I could do something like this:</p><br />
+<script src="https://gist.github.com/1490769.js?file=create.rb"></script><br />
+<br />
+<p>Excellent!  Now I can stub the find_by_sql call and I can create objects that will be in the correct class that I need.</p><br />
+<p>Do note that what I did above is for edge rails.  If you're on 3.0.1 or below you're going to have to do this to create your objects:</p><br />
+<script src="https://gist.github.com/1490769.js?file=runit.rb"></script><br />
+<br />
+<p>Also, pay attention to the way the hash was created.  You'll need to use strings for the keys otherwise you'll get a bunch of errors.</p>

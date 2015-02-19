@@ -1,0 +1,36 @@
+---
+layout: post
+title: Connecting to Private Repositories on Github using Windows
+date: '2008-04-21T14:33:00.008-07:00'
+author: Rimas Silkaitis
+tags:
+- git
+modified_time: '2008-11-11T17:21:40.499-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-8769076043228325542
+blogger_orig_url: http://neovintage.blogspot.com/2008/04/connecting-to-private-repositories-on.html
+---
+
+I'm going to be honest; I spent a little too much time trying to setup my Windows machine to work with my private repositories on Github.  Ok, well it wasn't that much time, but enough for me to warrant a blog posting.  For me, the situation really boiled down to step #4 and needing a config file to get Git Bash to work.  
+
+1. Install <a href="http://www.cygwin.com/">Cygwin</a>.  This is actually a requirement for MsysGit.  If this doesn't happen you'll receive a fatal error when you try to perform any action against your repository because git won't be able to fork.  The error message should read, <tt>fatal: Unable to Fork</tt>  This is forking in the scope of operating systems not forking in the git sense of the term.  Don't forget to add the install location of Cygwin to your PATH variable.  
+
+2.  Install <a href="http://code.google.com/p/msysgit/">MsysGit</a>.  When asked how you would like to use Git at the command line, I selected the <tt>Use Git Bash only</tt> option.  It's the most conservative option and will be less likely to mess anything up on your computer.  
+
+3.  <a href="http://github.com/guides/providing-your-ssh-key#msysGit">Generate your SSH keys</a> and post them to Github.  Follow the guide provided by the ninjas at Github.  
+
+4.  Create a configuration file in your .ssh directory.  In the directory where you found your public key (id_rsa.pub), you'll need to create a file called <tt>config</tt>.  This will tell Git Bash where to look for your key along with a few other options for connecting.  This is what mine looks like:
+<pre name='code' class='ruby'>
+  Host github.com
+  User git
+  Port 22
+  Hostname github.com
+  IdentityFile ~/.ssh/id_rsa
+  TCPKeepAlive yes
+  IdentitiesOnly yes</pre>
+Couple of important notes.  Make sure that the User line says <tt>git</tt>.  Also the <tt>IdentityFile</tt> option should point your private key.  If in step #3, when you setup your ssh keys, you gave your key file another name, make sure you put that name in the <tt>IdentityFile</tt>.
+
+There you go!  That should be it.  
+
+Troubleshooting Notes:
+
+If you run into a some problems getting ssh to work, I would recommend running <tt>ssh -v github.com</tt> at the Git Bash command line.  If you get an error <tt>Permission denied (public key)</tt>.  Make sure that your <tt>IdentityFile</tt> is setup correctly in your config file.  For any other errors, I would recommend checking that the other options within the config file are correct.

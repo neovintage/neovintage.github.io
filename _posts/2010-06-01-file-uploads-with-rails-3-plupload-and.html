@@ -1,0 +1,32 @@
+---
+layout: post
+title: File Uploads with Rails 3, Plupload, and CarrierWave
+date: '2010-06-01T09:00:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2011-12-11T03:11:55.685-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-8756332220331195966
+blogger_orig_url: http://neovintage.blogspot.com/2010/06/file-uploads-with-rails-3-plupload-and.html
+---
+
+<p>You may know that I've been working on <a href="http://bethebuilders.com/">Be The Builders</a> for a while now.  When it came time to build in some functionality for file uploads, I just started to cringe. I searched for a while on <a href="http://railstips.org/blog/archives/2009/07/21/uploadify-and-rails23/">ways</a> <a href="http://timmyc.posterous.com/uploadify-on-rails-with-paperclip">to</a> <a href="http://casperfabricius.com/site/2009/03/26/uploading-multiple-files-with-progress-indicator-using-jquery-flash-and-rails/">get</a> it done, but I was hoping for something a little easier without the need for middleware.  I came across <a href="http://plupload.com/">Plupload</a> and figured I'd give it go for integrating into Rails 3. Ultimately, it was pretty easy and painless.  I'll walk you through the process.  Just to note, I was using CarrierWave to handle the file uploads on the Rails side and Mongoid as my ORM.</p>
+
+<p>
+<ul>
+
+<li><b>Step 1</b> - Download Plupload and copy the js folder into your javascripts directory.  I'm not going to go through all of the options for Plupload, just what it takes to get you going.  You can figure out all of the options in Plupload's <a href="http://www.plupload.com/documentation.php">documentation</a>.</li>
+
+<li><b>Step 2</b> - Add the appropriate <tt>javascript_include_tag</tt> to your view.  Since I only had one action that was going to handle the creation of the images, I just put it in my <tt>new.html.erb</tt> view.<script src="https://gist.github.com/1444714.js?file=javascript_include.html.erb"></script></li>
+
+<li><b>Step 3</b> - Now comes the part where we need to add some of the javascript to get the Plupload controls to show up on the page.  I followed the <a href="http://www.plupload.com/example_custom.php">custom example</a> that was posted on their website. The important points that you need to know about the javascript below is the <tt>multipart</tt> and <tt>multipart_params</tt> options.  Without those, CarrierWave is going to throw all sorts of errors when you try to upload the file.  Also important to note is the use of the authenticity token in the <tt>multipart_params</tt>.  It's just something that needs to be done to keep the session legit <script src="https://gist.github.com/1444714.js?file=script_tag.html"></script> The html in the view is the same as the Plupload documentation example.</li>
+
+<li><b>Step 4</b> - Get your CarrierWave uploader mounted to your model.  In this example, this is what I have: <script src="https://gist.github.com/1444714.js?file=asset.rb"></script> Now if you're using Rails 3 like I am, make sure you do a <tt>require 'carrierwave'</tt> and <tt>require 'carrierwave/orm/mongoid'</tt> at the top of your application.rb file.  Also, you'll have to pull the latest code from github.  At the time of this writing, the carrierwave gem does not support Rails 3.</li>
+
+<li><b>Step 5</b> - Code up the create action in your controller.  It could be something as simple as this: <script src="https://gist.github.com/1444714.js?file=create.rb"></script> Mine doesn't look that that, it's a little messy and I didn't want to paste all of it here.
+</li>
+<li><b>Step 6</b> - Relax and have a much deserved drink.  You're done!</li>
+</ul>
+</p>
+
+<p>I found this process to be extremely easy and with Plupload I now have the option to use many different methods (flash, silverlight, html5, etc) to get files uploaded to Rails.  Hope this quick tutorial helps you guys.</p>

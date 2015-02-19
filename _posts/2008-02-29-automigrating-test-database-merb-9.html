@@ -1,0 +1,16 @@
+---
+layout: post
+title: Automigrating the Test Database (Merb .9 / Rspec / Datamapper)
+date: '2008-02-29T13:20:00.005-08:00'
+author: Rimas Silkaitis
+tags: 
+modified_time: '2008-02-29T13:32:54.607-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4751991475318512983
+blogger_orig_url: http://neovintage.blogspot.com/2008/02/automigrating-test-database-merb-9.html
+---
+
+In a followup to Marcus' <a href="http://marcus.ahnve.net/2008/02/16/how-to-automigrate-the-test-database-using-merb-datamapper-and-rspec/">note</a> about migrating the test database, I'd like to point out that when you try to auto migrate in <tt><b>spec/spec_helper.rb</b></tt> using <tt><b>DataMapper::Base.auto_migrate!</b></tt>, it fails.  
+
+Instead I would use <tt><b>DataMapper::Persistence.auto_migrate!</b></tt>.  This command will pick up all of the models that you setup in your <tt><b>app/models</b></tt> folder.  
+
+Enjoy!

@@ -1,0 +1,31 @@
+---
+layout: post
+title: Configuring Your Rails 3 Plugin
+date: '2010-11-14T10:00:00.000-08:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2011-12-17T09:06:10.895-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-3088970529009815213
+blogger_orig_url: http://neovintage.blogspot.com/2010/11/configuring-your-rails-3-plugin.html
+---
+
+<p>With Railties, I've found writing plugins for Rails 3 to be much easier than before.  Instead of writing a post about how easy it is to create plugins, I figured I would share what I learned about configuring your recently created plugin.  After poking through the Rails code, I came across some interesting things that can really clean up and tighten the code in your Rails projects.</p><br />
+<p>If you're looking for more of an introduction on Railties and Rails 3 plugins, I recommend that you read a couple of posts before you continue with mine.  These posts should be enough to get you started.<ul><li><a href="http://www.igvita.com/2010/08/04/rails-3-internals-railtie-creating-plugins/">Rails 3 Internals: Railtie & Creating Plugins</a></li>
+<li><a href="http://www.engineyard.com/blog/2010/extending-rails-3-with-railties/">Extending Rails 3 with Railties</a></li>
+<li><a href="http://edgeapi.rubyonrails.org/classes/Rails/Railtie.html">Railtie API doc</a></li>
+<li><a href="http://www.themodestrubyist.com/2010/03/01/rails-3-plugins---part-1---the-big-picture/">Rails 3 Plugins - Part 1</a></li>
+</ul></p><br />
+<h3>Environment-specific Configuration</h3><p>In the past, if you needed any type of configuration to be done in your app you'd more than likely <a href="http://railscasts.com/episodes/85-yaml-configuration-file">create a yaml file</a> and stick what you needed in there.  With Rails 3 and Railties, you can move all of your plugin configuration into the environment specific files (application.rb / development.rb / test.rb / production.rb) within your Rails project.  I like this so much more because all of the configuration stays in the same place and you don't have to litter your project with a bunch of yaml files.</p><br />
+<p>Throughout this post, I'll refer to a <a href="https://gist.github.com/665714">library I created</a> to use MongoDB as a FIFO cache store.  Let's start with a snippet of  <tt>development.rb</tt> in one of my current projects.</p><br />
+<script src="https://gist.github.com/1490742.js?file=development.rb"></script><br />
+<br />
+<p>The important line in the above code is <tt>config.mongo_fifo</tt>.  Did you know that you can create any variable that you want within the <tt>config</tt> object?  The cool thing is that the config object is actually an instance of Rails::Railtie::Configuration and when you specify a method that doesn't exist, that class will actually go through <tt>method_missing</tt> and add the new method to a hash and assign whatever you wanted to it.  So in the example above, <tt>mongo_fifo</tt> was added to the application's config hash with a new instance of <tt>MongoFifo</tt>.  If you need a little more configurability with your methods, like <tt>action_mailer</tt> above, you can do that too.  So let's say I wanted <tt>mongo_fifo</tt> to have a slew of config options, I could do this in my Railties class to add that ability:</p><br />
+<script src="https://gist.github.com/1490742.js?file=mongo_fifo.rb"></script><br />
+<br />
+<p>Coincidentally, that's how ActiveRecord, ActionMailer and ActiveSupport allow for "namespaced" configuration in your Rails app.</p><br />
+<h3>Initializers</h3><br />
+<p>Now that we moved the configuration into the specific environment files, we'll be able to access it via our initializers.  I really wish I had more to write here but it's just as easy as accessing a hash. So in my MongoFifo code, I've got one initializer that will create a global variable within the Rails module so that anywhere within my app, I can read and write to my MongoDB cache.  Here's the code from MongoFifo:</p><br />
+<script src="https://gist.github.com/1490742.js?file=initializer.rb"></script><br />
+<br />
+<h3>Get going!</h3><p>The beauty of Railties is that you don't necessarily need to develop a whole gem to get the benefits of it's modularity.  In my case, I wrote some code that's a slimmed down version of an ActiveSupport cache store that works with MongoDb's capped collections.  I plopped this file in my <tt>/lib</tt> directory.  I'm able to put the MongoDB connection configuration in the specific environment (development / test / production) file and keep my overall Rails project that much cleaner.  Give it a go!</p>

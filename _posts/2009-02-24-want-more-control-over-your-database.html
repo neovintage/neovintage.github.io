@@ -1,0 +1,55 @@
+---
+layout: post
+title: Want more control over your database tables in DataMapper?
+date: '2009-02-24T07:23:00.007-08:00'
+author: Rimas Silkaitis
+tags:
+- datamapper
+modified_time: '2009-02-24T08:04:38.588-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-2040719545017684716
+blogger_orig_url: http://neovintage.blogspot.com/2009/02/want-more-control-over-your-database.html
+---
+
+I had originally submitted a request to the DataMapper team to include an option to allow MySQL database users the ability to specify table options in their DataMapper models.  My needs were around data warehousing and I wanted to use a different storage engine like Infobright.  Unfortunately this request was denied because dm-core could have ended up looking like spaghetti if my request were approved.  Mind you I'm oversimplifying the argument, but I understood where they were coming from.  As a result, I bring you <a href="http://github.com/neovintage/dm-mysql/tree/master">dm-mysql</a>!
+
+<h3>Overview</h3>
+<ul>
+  <li><p><b>Plugin Name:</b>  dm-mysql</p></li>
+  <li><p><b>Summary:</b>  Plugin that allows MySQL DataMapper user the ability to specify MySQL table options when DataMapper creates database tables.</p></li>
+  <li><p><b>Requirements:</b> Your DataMapper version must be > 0.9.10</p></li>
+  <li><p><b>Options:</b> For available MySQL table options see the <a href="http://dev.mysql.com/doc/refman/5.1/en/create-table.html">MySQL documentation.</a> Note that this plugin was created against MySQL 5.1.</p></li> 
+  <li><p><b>To Install:</b>  Make sure you have github listed as one of your sources.</li><pre name="code" class="ruby">sudo gem install neovintage-dm-mysql</pre></li>
+</ul>
+
+<h3>Example</h3><pre name="code" class="ruby">
+require 'dm-core'
+require 'dm-mysql'
+
+# Shows available options
+class HasAllOption
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :name, String
+
+  table_opts :engine => 'MyISAM',
+    :avg_row_length => 7,
+    :checksum => 1,
+    :comment => "Best Comment EVER!!",
+    :connection => 'another_connection',
+    :data_directory => '/dude/wheres/my/dictionary',
+    :delay_key_write => 0,
+    :index_directory => '/index/this',
+    :insert_method => 'FIRST',
+    :key_block_size => 256,
+    :max_rows => 5,
+    :min_rows => 0,
+    :pack_keys => 0,
+    :password => 'secret',
+    :row_format => 'COMPRESSED',
+    :tablespace => 'DUDE',
+    :union => 'has_its, not_includeds'
+
+end</pre>
+
+<p>As always, I appreciate any feedback on the code or any features that you'd like to see implemented as part of this.</p>

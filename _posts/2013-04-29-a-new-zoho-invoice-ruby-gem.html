@@ -1,0 +1,15 @@
+---
+layout: post
+title: A New Zoho Invoice Ruby Gem
+date: '2013-04-29T09:00:00.000-07:00'
+author: Rimas Silkaitis
+tags: 
+modified_time: '2013-04-29T09:00:10.625-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4647744291434419522
+blogger_orig_url: http://neovintage.blogspot.com/2013/04/a-new-zoho-invoice-ruby-gem.html
+---
+
+<p>With all the choices for invoicing systems out there, making a decision on which invoicing system to use can be challenging. In my company's case the decision really only boiled down to one feature, the ability to send invoices via mail. That being said, there weren't any good choices out there for Ruby gems, so I figured I'd build my own.  Most of the inspiration for setting it up came from the official Zendesk ruby gem.</p><br />
+<p>I drew my inspiration from two main design aspects of the Zendesk gem.  First is the concept of a client and that client gets passed to all of the associated resources in the system.  The main benefit of that pattern is that it allows the developer to inject a mock client if they so choose for testing purposes, which I think is absolutely awesome.  The second reason is the ability to to do ActiveResource style scoping through the client so that you don't have to pass a client around if you don't want to.  I believe that between these two patterns it makes for interacting with an API a breeze.  For example:<br />
+<script src="https://gist.github.com/neovintage/5471962.js"></script></p><br />
+<p>To get started, download the latest version on rubygems.org and checkout the <a href="https://github.com/neovintage/zoho_invoice/blob/master/README.md">README</a>.  At the time of this writing, the gem is at version 0.3.1 and its not quite a full representation of the API.  I plan on 1.0 being that milestone in which you can interact with all API endpoints. If you have any issues with the gem, please feel free to file an issue in the <a href="https://github.com/neovintage/zoho_invoice">github repo</a>.</p>

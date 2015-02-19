@@ -1,0 +1,21 @@
+---
+layout: post
+title: New Site
+date: '2006-09-12T08:34:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- status
+modified_time: '2006-12-02T13:11:02.891-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-670033159045731722
+blogger_orig_url: http://neovintage.blogspot.com/2006/09/new-site.html
+---
+
+Finally.... It's complete.
+
+I found a template on the <a href="http://www.oswd.org/">open source web design</a> site that I really liked so I figured I would give it a shot with the new version of blogger thats in beta. I must say that the process was a little annoying in terms of creating the site design.
+
+The people at Blogger came up with a new set of tags that can be used to create your entire site. Unfortunately, this tag structure is very rigid. Let me run through an example and then afterward I'll list a few of my annoyances. When encapsulating any kind of function within the template you need to create whats call a widget. Then within that widget you have to create multiple code blocks called includeables. The includables function like subroutines analogous to the subroutines you'd have in Visual Basic. All of the includeable tags need to have an id attribute set to identify it between the others in the widget. Also, you need to set at least one of the includeables with an id of main. Thats the main entry point for the widget. Then you can reference the other includeables from within the "main includeable". One more thing, for each widget that you create on the page, you must encapuslate that within a section. You can have multiple widgets within a section. Now when the page is actually rendered, the widget and section tags will actually get transformed into &lt;div&gt; tags.
+
+Now lets run down the annoyances.....
+
+<ul><li>When creating a widget and setting the class variable, Blogger overrides anything that you set in this attribute when rendering the page.  This removes the ability to set the class variable to something of your choosing.  You could probably use the rendered name in the class attribute in your css, but since class is unique for each widget, it kinda defeats the purpose.</li><li>The only tags that can be in the Blogger template section tags are widgets, and I mean only.  You're not allow to have any comment tags either.  I think it makes the template a little messy.  </li><li>Forcing widgets to be within section tags.  I found this a little annoying because it created another layer of div tags in the markup.  It made it a little difficult when dealing with the css.  I'm still trying to figure out what use the section tag has other than containing widgets.</li><li>The help file is still a little sparse, but since the new service is still in beta, we'll let this one slide.  </li></ul><p>The new features of Blogger are nice, but I wouldn't call them earth shattering.  If the template markup was a little more flexible, I'd probably feel a little better about Blogger as a service.  I still would recommend you check them out for you site.  </p>

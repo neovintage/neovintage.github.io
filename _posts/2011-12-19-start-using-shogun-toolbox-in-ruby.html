@@ -1,0 +1,31 @@
+---
+layout: post
+title: Start Using Shogun Toolbox in Ruby
+date: '2011-12-19T07:00:00.000-08:00'
+author: Rimas Silkaitis
+tags:
+- ruby
+- machine learning
+modified_time: '2011-12-19T07:00:10.634-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-5667380310519692115
+blogger_orig_url: http://neovintage.blogspot.com/2011/12/start-using-shogun-toolbox-in-ruby.html
+---
+
+<p><a href="http://www.shogun-toolbox.org">Shogun Toolbox</a> is the ultimate in machine learning.  It provides a number of different machine learning models like <a href="http://en.wikipedia.org/wiki/Support_vector_machine">support vector machines (SVM)</a> and hidden Markov models just to name a few.  So why use Shogun toolbox?  Well, when you look at the SVM landscape, for example, you'll find many different publicly available implementations. Let's say you needed to switch your code to use OCAS instead of LibSVM, the semantics of interacting with each implementation could vary wildly.  As a result the <a href="http://jmlr.csail.mit.edu/papers/v11/sonnenburg10a.html">authors of Shogun Toolbox state</a>, "the motivation for creating a machine learning toolbox was to provide an easy, unified way for solving certain types of machine learning problems."  This is great for us because that means we'll get access to many more machine learning models without having to find or build C extensions for Ruby that interface with the SVM implementation we want to use.</p><br />
+<h3>What are we trying to solve with Shogun Toolbox?</h3><p>According to the wikipedia page for Shogun Toolbox, it was developed with bioinformatics in mind.  With an industry like that, you should expect lots of data, and do I mean lots.  We're talking about millions and millions of data points. Ok... so it can handle a lot of data, but what else is it good for?  The real sweet spot are two- and multiclass classification and regression problems, according to the <a href="http://jmlr.csail.mit.edu/papers/v11/sonnenburg10a.html">overview paper</a>. There are some other things packaged with the toolbox but know that if you're looking to do classification this is the package for you.</p><br />
+<h3>Compiling Shogun Toolbox</h3><p>The easiest way to get started would be to download the source from github.  Once downloaded, make your way to the src directory so that you can compile the toolbox for your machine.</p><script src="https://gist.github.com/1486795.js?file=simple.sh"></script><br />
+<p>It's as simple as that.  Theres a whole host of options that you can configure when you're compiling the program.  I would encourage you to check them out as you use the toolbox.  Since we're really interested in doing this for Ruby, we need to do a couple more things before we get the toolbox working. First, install the ruby gem narray to your system. Its pretty simple:</p><script src="https://gist.github.com/1486795.js?file=install_narray.sh"></script><br />
+<p>Then when you configure the toolbox  you'll need to specify that you also want the ruby_modular interface:</p><script src="https://gist.github.com/1486795.js?file=ruby.sh"></script><br />
+<p>There are other interfaces for languages like Octave, Java and Python.  Feel free to include them at this time.  You should be good to go from this point, unless you're an RVM user.</p><br />
+<h3>Gotchas for RVM users</h3><p>Unfortunately at this time, when you configure the library, it's not smart enough to know that you need to point to your current ruby instead of the system ruby.  You'll see a weird error in the build process like <tt>Undefined Symbol: _rb_str_new_cstr</tt>.  You'll need to collect two different pieces of information.</p><ul><li>The first is where your ruby lib lives.  You can issue <tt>rvm info</tt> and find the environment variable <tt>MY_RUBY_HOME</tt>.</li>
+<li>The second is where your platform specific include directory.  You can issue <tt>ruby -e "puts $:"</tt> at the command line and that will show you all of the directories ruby will look to include code.  Make sure you've switched to the ruby you want to use!  I recommend you put the compiled modshogun lib in the path with <tt>site_ruby</tt> and the platform specific folder.</li>
+</ul>Once you get that, all you need to do is slap those on the end of your configuration options:</p><script src="https://gist.github.com/1486795.js?file=configure.sh"></script><br />
+<p>If you didn't notice when you add the ruby dir to install to, modshogun will be available to all gemsets of the ruby you compiled against.  If you need to namespace modshogun to a particular gemset, let me know if you have any ideas.</p><br />
+<h3>Running through some examples</h3><p>Let's go through one of the classifier examples packaged with the source code, namely <a href="https://github.com/shogun-toolbox/shogun/blob/master/examples/undocumented/ruby_modular/classifier_libsvm_minimal_modular.rb"><tt>classifier_libsvm_minimal_modular.rb</tt></a>.  I've added my extra notes in the comments:<script src="https://gist.github.com/1439087.js?file=gistfile1.rb"></script></p><br />
+<h3>Resources</h3><ul><li>Shogun Toolbox: <a href="http://www.shogun-toolbox.org">http://www.shogun-toolbox.org</a></li>
+<li>Source Code: <a href="https://github.com/shogun-toolbox/shogun/">https://github.com/shogun-toolbox/shogun/</a></li>
+</ul></p><p>If you're new to machine learning and/or classification, I would recommend checking out some other articles to get up to speed on the subject before jumping into just a big piece of software like Shogun Toolbox:<br />
+<ul><li><a href="http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/">Support Vector Machines in Ruby</a></li>
+<li><a href="http://www.ml-class.org/">Stanford's Machine Learning Class</a></li>
+<li><a href="http://neovintage.blogspot.com/2011/11/text-classification-using-support.html">Text Classification Using Support Vector Machines in Ruby</a></li>
+</ul></p>

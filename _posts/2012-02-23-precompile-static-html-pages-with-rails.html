@@ -1,0 +1,22 @@
+---
+layout: post
+title: Precompile Static HTML Pages with Rails 3 Asset Pipeline
+date: '2012-02-23T20:38:00.001-08:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2012-02-23T20:51:44.719-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-6792721175845825744
+blogger_orig_url: http://neovintage.blogspot.com/2012/02/precompile-static-html-pages-with-rails.html
+---
+
+<p>At CarWoo we recently upgraded all the way from Rails 2.3.8 to 3.2 and with that brought the asset pipeline.  We probably could have skipped the asset pipeline but we figured we should throw in it for good measure.  One of the problems that we ran into was including some of the compiled javascript and stylesheet files from the assets directory into our 404 and 500 error pages.  In Rails 2.3, we just created static html pages and threw them in the public folder and didn't think about them ever again.  Unfortunately, since the Rails 3 asset pipeline adds and MD5 hash to the js and css files names, statically linking them wasn't going to work.<br />
+</p><br />
+<p>I wish I could take credit for this, but the honorable <a href='http://twitter.com/sshconnection'>@sshconnection</a> recommended that we just precompile 404 and 500 pages as well.  And wouldn't you know that, it was way easier than you think it could be.<br />
+</p><br />
+<p>First get your config in place:<br />
+<script src="https://gist.github.com/1897651.js?file=application.rb"></script></p><br />
+<p>Just like any Rails convention, add the extensions to want to use to precompile.  In my case, I used erb in my 404 page: <br />
+<script src="https://gist.github.com/1897651.js?file=404.html.erb"></script></p><br />
+<p>This probably should be labelled as a quick tip, but it was a little a-ha moment for me and I figured I'd share it.<br />
+</p>

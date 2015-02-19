@@ -1,0 +1,21 @@
+---
+layout: post
+title: TDD and SAS, part II
+date: '2006-09-18T06:24:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- misc languages
+modified_time: '2007-04-03T12:10:25.366-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-7045731011719147877
+blogger_orig_url: http://neovintage.blogspot.com/2006/09/tdd-and-sas-part-ii.html
+---
+
+My jump into the world of TDD on a mainframe with SAS has been a little frutsrating. I can see why the team that came up with FUTS did not touch the mainframe world. One thing that I have realized is that the macros associated with FUTS will work on a mainframe as is, but we dont have the luxury of having a perl script that will summarize all of the test cases and run all of the test suites which provides a nice little output. My goal is to provide a better means of reporting on the tests that do occur.
+
+Since we dont have some of those luxuries on a mainframe, I tried to develop a pure SAS solution for developing, running, and summarizing all of the unit tests. Typically in most other languages, you have seperate object that is setup to perform tests. Then this is run by some sort of test runner that will summarize all of the output. In my case, I've realized that I have to include all of the unit test code within the SAS itself. By that I mean, if I invoke the SAS interpreter I need to include the tests within the same instance as the program that is currently running. Thats pretty straight forward, just include whatever unit tests you want within the code that you want to test. I recommend encapsulating all of your unit tests within another macro so that you can turn the tests on an off. This will be helpful when you move your code to production. That takes care of getting our tests completed.
+
+My second concern is with the fancy reporting. Since the output of the FUTS macros go to the SASLOG, we need another SAS program to summarize the results from the log. This is where the recommendation for an encapsulation macro becomes even more useful. Once the encapsulation macro has been invoked, I typically indicate in the current SASLOG that the testing will begin and I save off the path name. Then I change the path of the current SASLOG to something temporary, I'll elaborate on this in a little bit. Next, you should include the code for all of your test cases. I typically create the code in another file, that way that allows for two people to work on the same code. Finally, read in the temporary file and run it through a set of SAS code that will generate our results and outputting it to our destination of choice.
+
+This may not be the most awesome way of dealing with testing on the mainframe but its my attempt of trying to deal with writing better code and being more confident of changes that I may put into my code.
+
+I'll try to include a copy of my macro code, or at least pseudo code for how this process was set up.

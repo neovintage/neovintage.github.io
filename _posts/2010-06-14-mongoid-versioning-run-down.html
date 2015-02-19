@@ -1,0 +1,38 @@
+---
+layout: post
+title: Mongoid Versioning - A Run Down
+date: '2010-06-14T06:13:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- mongoid
+modified_time: '2011-12-17T09:20:37.224-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-5973733687398036581
+blogger_orig_url: http://neovintage.blogspot.com/2010/06/mongoid-versioning-run-down.html
+---
+
+<p>In past Rails apps that I've built, I've used plugins such as <a href="http://github.com/laserlemon/vestal_versions">vestal version</a> or <a href="http://rubygems.org/gems/acts_as_versioned">acts_as_versioned</a> to version my ActiveRecord models in MySQL.  Using Mongoid, you get that functionality built-in without the need for extra gems / plugins.</p><br />
+<p>For the purposes of this discussion, let's use the following code as a reference point:</p><br />
+<script src="https://gist.github.com/1490792.js?file=model.rb"></script><br />
+<br />
+<p>So.... what really goes on when you put that innocent <tt>include Mongoid::Versioning</tt> in your model?  I'm glad you asked: <ul><li>A field named <tt>version</tt> of type Integer is added.</li>
+<li>An <tt>embeds_many</tt> association named <tt>versions</tt> is created with the <tt>:class_name</tt> option set as your current class.  Using our example above the generated code would look like this:  <tt>embeds_many :versions, :class =&gt; Post</tt>.</li>
+<li>A <tt>before_save</tt> callback is created that takes care of versioning the document.</li>
+</ul>Now this stuff came straight from the <a href="http://github.com/durran/mongoid/blob/master/lib/mongoid/versioning.rb">documentation</a>.</p><p>Now that we've got the basics established lets go through some use cases that will better illustrate how versioning works.<ul><li>Let's say I have an idea for a new post and I create one with just a title.  Then at some point in the future I finally get around to writing the content and save it to MongoDB.<br />
+<br />
+<script src="https://gist.github.com/1490792.js?file=operation.rb"></script><br />
+<br />
+Since we've completed 2 save operations, there will be two versions in the database and the document look something like this:<script src="https://gist.github.com/1490792.js?file=doc.json"></script><br />
+Notice in the versions array that the content field is actually not there.  If a default is not defined on your field and you do not create anything the field will not be created in the document.</li>
+<li>Now we've got our newly finished post in MongoDB and it's available for the world to see.  At some point, a user decides to comment on our post and we need to save that to our document.<br />
+<script src="https://gist.github.com/1490792.js?file=operation1.rb"></script><br />
+The document in the database will now look like this:<script src="https://gist.github.com/1490792.js?file=doc1.json"></script><br />
+Notice that in this instance that a new version was not created when we saved an embedded document.  This is great when you've got a setup like this and you don't want to create multiple versions.</li>
+</ul></p><p><h3>Gotchas & Workarounds</h3><ul><li><b>Take into consideration how you're going to create your embedded documents</b> - By this I mean if you were to do something like this:<script src="https://gist.github.com/1490792.js?file=operation2.rb"></script><br />
+Mongoid will not only create a new comment but will also create a new version of the entire document</li>
+<li><b>The entire contents of the document is saved in the version</b> - When embedding something like comments on a post, depending on how many comments your had, that array of comments could get pretty big.  Now if you were to update a field on the post and it had a large amount of comments, all of the comments would get saved in the old and new versions.  Again depending on the size of the comments, this could quickly start taking up large amounts of disk space</li>
+<li><b>You can skip creating a version if need be</b> - I wouldn't recommend this if you're trying to keep track of documents, but it can be done.<br />
+<br />
+<script src="https://gist.github.com/1490792.js?file=skip.rb"></script><br />
+<br />
+Note that <tt>:revise</tt> is the name of the method in <tt>Mongoid::Versioning</tt> and that I did this on the class Post and not an instance.  I'm not sure if you can skip a callback on an instance.  I'll have to look into that.</li>
+</ul></p><p>That's all I've got for now.  As I continue to learn more about mongoid, I'll continue to post on this blog.  Maybe I'll even turn this into a larger series on the ins and outs of using mongoid.</p>

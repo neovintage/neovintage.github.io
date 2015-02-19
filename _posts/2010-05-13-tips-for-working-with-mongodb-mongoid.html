@@ -1,0 +1,66 @@
+---
+layout: post
+title: Tips for working with MongoDB & Mongoid
+date: '2010-05-13T10:39:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+- mongodb
+modified_time: '2010-05-13T10:39:24.466-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-626824900541751289
+blogger_orig_url: http://neovintage.blogspot.com/2010/05/tips-for-working-with-mongodb-mongoid.html
+---
+
+<p>As with anything I do on this blog, it's to make sure that I don't forget what I just learned.  Below are some of the things that I've learned while using Mongoid on my current project, <a href="http://bethebuilders.com/">Be The Builders</a>.  Just to note, I'm working off the current beta version of Mongoid 2.0.0.beta4 and MongoDB 1.4.0.</p>
+
+<p><ul><li><b>Document != Embedded Document</b> - This seem pretty obvious, but it didn't to me at first.  Be The Builders is my first attempt at using a document oriented db, and since I came from a very heavy relational db world (read: business intelligence), this kinda screwed me up.  Once you write <tt>embedded_in</tt> in your model, that model then becomes an embedded document and some things from documents don't apply any more:<ul><li>Mongoid::Versioning</li><li>indexes - Well sorta, you'll see later that you can get around this</li></ul>
+<li><b>Don't create indexes on Embedded Docs! (sorta)</b> - When I initially started to create my Mongoid models, I thought I could do something like this:<pre name='code' class='ruby'>
+class Post 
+  include Mongoid::Document
+  field :author
+  field :text
+  field :publish_date, :type => Date
+  embeds_many :comments
+  index [:author, :asc]
+end
+
+class Comment
+  include Mongoid::Document
+  field :author
+  field :text
+  field :publish_date, :type => Date
+  embedded_in :post, :inverse_of => :comments
+  index [:publish_date, :desc]
+end</pre>Unfortunately, I kept getting an InvalidCollection Error from Mongoid and for the life of me couldn't figure it out.  I knew MongoDB allowed its users to <a href="http://www.mongodb.org/display/DOCS/Indexes#Indexes-EmbeddedKeys">create indexes</a> on an embedded document.  After a little testing, I came up with this instead:<pre name="code" class="ruby">
+class Post 
+  include Mongoid::Document
+  field :author
+  field :text
+  field :publish_date, :type => Date
+  embeds_many :comments
+  index [:author, :asc]
+  index ["comments.publish_date", :desc]
+end
+
+class Comment
+  include Mongoid::Document
+  field :author
+  field :text
+  field :publish_date, :type => Date
+  embedded_in :post, :inverse_of => :comments
+end</pre>Lesson:  If you want to create indexes on embedded documents, create the index in the parent document.  Then use a string to denote what you want indexed.  
+</li><li><b>Don't hesitate to drop into the lower level 'mongo' driver</b> - There's a lot that Mongoid already does that's not even listed on its website, like cursors.  Yet, I find that I want to do things like map reduce on a collection.  Fortunately for us, the mongo driver is a requirement for Mongoid.  So when you call <tt>Post.collection</tt> you actually get a collection object from the mongo driver which then we can run <tt>map_reduce</tt>.  Chaining this example together, it would look something like this:<pre name="code" class="ruby">
+m = 'function(){ this.tags.forEach( function(z){ emit( z , { count : 1 } ); } ); };'
+r = <<-REDUCE
+function( key , values ){
+  var total = 0;
+  for ( var i=0; i < values.length; i++ )
+    total += values[i].count;
+  return { count : total };
+};
+REDUCE
+Post.collection.map_reduce(m, r)
+</pre>There are plenty more functions that can be found in the mongo driver, but if you're looking for map_reduce, you can find it in the <a href="http://www.mongodb.org/display/DOCS/MapReduce">main docs</a> and the <a href="http://api.mongodb.org/ruby/1.0.1/Mongo/Collection.html#map_reduce-instance_method">RDoc</a>.</li>
+</ul></p>
+
+<p>That's all I've got for now.  When I figure out more you can bet that I will be posting it here.  MongoDB / Mongoid have been a joy to work with.</p>

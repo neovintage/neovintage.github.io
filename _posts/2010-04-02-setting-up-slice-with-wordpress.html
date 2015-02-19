@@ -1,0 +1,55 @@
+---
+layout: post
+title: Setting up a Slice with Wordpress
+date: '2010-04-02T10:24:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- wordpress
+- php
+modified_time: '2010-04-02T10:39:24.335-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4050314894222865515
+blogger_orig_url: http://neovintage.blogspot.com/2010/04/setting-up-slice-with-wordpress.html
+---
+
+<p>The whole point of this post is to get Wordpress installed on your slice at <a href="http://slicehost.com/">Slicehost</a> as quickly as possible.  This was my first time doing so and I figured I should create a shell script to complete the process if my slice ever crashed and burned.  Skip to the bottom if you want to get right to it.</p>
+
+<p>I love <a href="http://slicehost.com">Slicehost</a>.  The plans are relatively inexpensive and you know what you're going to get.  Recently, my wife wanted to setup a blog and I really didn't feel comfortable setting it up for her on a shared host. She likes it when websites are responsive, who doesn't.</p>
+
+<p>I wanted to keep my costs to a minimum on slicehost, so I opted for the 256 slice.  That being said, I needed to keep the memory usage as low as possible.  That meant that Apache was out the door and in came nginx.  It's been a while since I've had to install php.  Let's face it, I'm a ruby guy.  Anyway, I'll review the setup and then tell you what the install script does and the assumptions made.</p>
+
+<h3>The Setup</h3>
+<ul>
+<li>PHP 5.3.1</li>
+<li>PHP-fpm 0.6</li>
+<li>Wordpress 2.9.2</li>
+<li>Nginx</li>
+</ul>
+
+<h3>Assumptions</h3>
+<ul>
+<li>Youre logged in as root</li>
+<li>Using Ubuntu 9.10</li>
+<li>Starting from a newly created slice</li>
+<li>You have a hostname to use for the install</li>
+</ul>
+
+<h3>What are steps in the bash script?</h3>
+<ul>
+<li>Collect new passwords for root account, a new user account, and the mysql database</li>
+<li>Collect the hostname from the terminal</li>
+<li>Reset the root password</li>
+<li>Create the new user and it to the sudo list</li>
+<li>Update sshd configuration based on <a href="http://articles.slicehost.com/assets/2007/9/4/sshd_config.txt">this configuration</a></li>
+<li>Update iptables</li>
+<li>Upgrade the system</li>
+<li>Install needed libraries to compile php</li>
+<li>Download PHP 5.3.1, PHP-FPM, and libevent</li>
+<li>Patch PHP with PHP-FPM (more info on php-fpm <a href="http://github.com/dreamcat4/php-fpm">here</a>, <a href="http://php-fpm.org/">here</a> and <a href="http://interfacelab.com/nginx-php-fpm-apc-awesome/">here</a>)</li>
+<li>Compile PHP and install</li>
+<li>Create config file for nginx</li>
+<li>Install Wordpress</li>
+</ul>
+
+<p><a href="http://gist.github.com/353406">Get the bash script</a></p>
+
+<p>Enjoy the script!</p>

@@ -1,0 +1,62 @@
+---
+layout: post
+title: Templates in Rails 3
+date: '2010-04-19T08:31:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2010-04-19T08:31:02.376-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4292349548070395038
+blogger_orig_url: http://neovintage.blogspot.com/2010/04/templates-in-rails-3.html
+---
+
+<p>Templates have been around since version 2.3.0 of Rails.  They're great at getting an application started quickly with many of the gems, plugins, and code you need.  Pratik has an excellent <a href="http://m.onkey.org/2008/12/4/rails-templates">high level overview</a> on the feature when it was first released.  Now that Rails 3 is on the horizon, I just wanted to point out some of the new things that you can do with your templates.</p>
+
+<h3>Overview</h3>
+<p>As I'm sure you know, Rails 3 brings with it a number of rewrites to many areas of the codebase.  The code that handles the templates is no different.  What I found interesting is that the code that handles many of the actions within the templates comes from both Railties and Thor.  </p>
+
+<h3>What's the same since 2.3</h3>
+<p>Many of the commands are the same from the previous iteration of the template feature.  They include:
+<ul>
+<li><tt>gem</tt></li>
+<li><tt>plugin</tt></li>
+<li><tt>initializer</tt></li>
+<li><tt>rakefile</tt></li>
+<li><tt>generate</tt></li>
+<li><tt>run</tt></li>
+<li><tt>route</tt></li>
+<li><tt>inside</tt></li>
+<li><tt>ask</tt></li>
+<li><tt>yes?</tt></li>
+<li><tt>no?</tt></li>
+<li><tt>git</tt></li>
+<li><tt>environment</tt></li>
+<li><tt>run_ruby_script</tt></li>
+<li><tt>gsub_file</tt></li>
+<li><tt>append_file</tt></li>
+</ul>
+If you want more detail on the specifics of these commands check out Pratik's <a href="http://m.onkey.org/2008/12/4/rails-templates">post</a> on the matter.
+</p>
+
+<h3>What's new</h3>
+<p>
+ Most of the new stuff comes from Thor and is not Rails specific: 
+ <ul>
+  <li><tt>add_source</tt> - Adds a source line to the top of your Gemfile</li>
+  <li><tt>apply</tt> - Loads an external file and then executes it.</li>
+  <li><tt>thor</tt> - You can run any thor commands that you want within your template. </li>
+  <li><tt>copy_file</tt> - copies a file to a directory that you name</li>
+  <li><tt>get</tt> - will download files and place in a directory/file you name</li>
+  <li><tt>template</tt> - ERB template that you specify and will get executed</li>
+  <li><tt>chmod</tt> - Changes mode</li>
+  <li><tt>prepend_file</tt> - Prepends text to file</li>
+  <li><tt>inject_into_class</tt> - injects text into a given class</li>
+  <li><tt>inject_into_file</tt> - injects text into file</li> 
+  <li><tt>remove_file</tt> - deletes files and entire directories</li>
+  <li><tt>create_file</tt> - creates an empty file</li>
+  <li><tt>empty_directory</tt> - creates an empty directory</li>
+  <li><tt>directory</tt> - copies directories.  It's also recursive.</li>
+ </ul>
+</p>
+
+<p>That's it!  If you need more detailed information on how these functions work, check out the rdoc.  The rdoc for the Thor commands be found <a href="http://rdoc.info/rdoc/wycats/thor/blob/f9631815b7ada075d866d29e4c2dffaa15c18a92/Thor/Actions.html">here</a> and the Rails template commands can be found <a href="http://github.com/rails/rails/blob/master/railties/lib/rails/generators/actions.rb">here</a> I'm pretty excited about these changes and they will definitely help me clean up my templates.</p>

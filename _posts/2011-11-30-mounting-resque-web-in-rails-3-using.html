@@ -1,0 +1,24 @@
+---
+layout: post
+title: Mounting Resque Web in Rails 3 using Warden, Devise and the Asset Pipeline
+date: '2011-11-30T12:46:00.001-08:00'
+author: Rimas Silkaitis
+tags:
+- rack
+- rails
+modified_time: '2011-12-11T03:05:05.292-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-5526358257835693457
+blogger_orig_url: http://neovintage.blogspot.com/2011/11/mounting-resque-web-in-rails-3-using.html
+---
+
+<p>Really the title of this post should be, "Don't fear middleware".  So here's the set up, I had a Rails 3.1 app that was utilizing the Asset Pipeline, Resque and Devise.  Like most people, I wanted to just mount Resque Server into the Rails app behind the authorization that I was already using and be done with it.  The easiest and most elegant way of doing so is to <a href="http://blog.kiskolabs.com/post/776939029/rails3-resque-devise">do it in your routes</a>.  What's so awesome about this solution is that you get authorization and paths pointing to Resque Web just like that.  Unfortunately, if you're using the asset pipeline like I was, you'll be unable to get any of the Resque Web assets served by the application in staging and production.  By "using the asset pipeline", I mean setting the <tt>action_dispatch.x_sendfile_header = 'X-Sendfile'</tt> and <tt>serve_static_assets = false</tt> in the config file.  Plus the solution given above for serving the assets from Resque is to copy them to your assets folder.  BARF!</p>
+
+<h3>To The Middleware</h3>
+<p>Let's delve into the rackup file. If you're like most Rails projects you probably have a rackup file that looks like this:</p><script src="https://gist.github.com/1459949.js?file=old_config.ru"></script> 
+<p>Well thats going to have to change.  First off you'll need to map the routes and then tell Resque Web how to handle authentication within the scope of rack.  What you end up with is a file like this: </p>
+<script src="https://gist.github.com/1459949.js?file=config.ru"></script>
+
+<p>The only thing that's really left is creating a new instance of Resque::Server.  I decided to do it via Sinatra rather than creating another rack middleware.  I have an initializer in config/initializers/resque.rb like this:</p>
+<script src="https://gist.github.com/1459949.js?file=awesomeapp_resque.rb"></script>
+
+<p>There you have it, you can now serve Resque Web without having to copy any assets or do anything funky to the gem.  This feels a little bit better to me since we're not really messing with the internal workings of the resque gem.</p>

@@ -1,0 +1,44 @@
+---
+layout: post
+title: Merb + Namespace + Subdomain
+date: '2008-01-20T14:46:00.001-08:00'
+author: Rimas Silkaitis
+tags:
+- merb
+modified_time: '2008-11-11T17:40:45.407-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4770307005806537773
+blogger_orig_url: http://neovintage.blogspot.com/2008/01/merb-namespace-subdomain.html
+---
+
+I'd like to post a clarification on getting namespaces to work within merb.  I'm still very new to the merb world and its semantics regarding namespaces.  I'll be honest, it  tripped me up a little bit.  In this example, I'm going to run through getting a subdomain and namespace setup in your router file and how your controller should be structured to take advantage of that namespace.
+
+Assumptions:
+<ul><li>You know how to generate controllers in merb</li><li>Using merb 0.5.2
+</li></ul>
+Example Prep:
+
+<ul><li>I'll be creating a namespace Admin, because I'd like to keep all of my actions associated with administration separate from the rest of my application</li><li>Within the Admin namespace, I'll be creating a controller called User.
+</li><li>I want to keep all of the admin controllers on a separate subdomain on my site, something like, http://admin.mysite.com.
+</li></ul>
+Setup:
+<ol>
+<li>Create the appropriate routes in the Router file<pre name="code" class="ruby">r.match(:domain => /^admin./).to(:namespace => 'admin') do |admin|
+    admin.match('/').to(:controller => 'admin', :action => 'index')
+end</pre>
+</li>
+<li>Make sure your merb file structure jives with your new Namespace<br />Merb requires that if you do create a namespace that the resulting controller code be in its own subfolder in the controller folder.  The subfolder needs to have the same name as the namespace. In our example it should look something like this:
+<pre name="code" class="ruby">app/<br/>  controllers/<br />    admin/<br/>      user.rb
+</pre>
+<li>Setup the Controller based upon the Namespace
+Note the use of the module declaration.  At this point you need to make sure the structure in the code looks something like this:
+<pre name="code" class="ruby">module Admin
+  class User < Application
+    
+    def index
+      render
+    end
+  
+  end
+end</pre></li>
+</ol>
+And there you have it, we've successfully setup your controller and routes to take advantage of the use of a namespace in concert with a subdomain.

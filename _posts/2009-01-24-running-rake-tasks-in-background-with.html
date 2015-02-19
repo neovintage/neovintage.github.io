@@ -1,0 +1,45 @@
+---
+layout: post
+title: Running Rake Tasks in the Background with Monit
+date: '2009-01-24T14:49:00.020-08:00'
+author: Rimas Silkaitis
+tags:
+- merb
+- rake
+modified_time: '2009-01-25T10:23:21.265-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-4013623989296702488
+blogger_orig_url: http://neovintage.blogspot.com/2009/01/running-rake-tasks-in-background-with.html
+---
+
+<p>In my last <a href="http://neovintage.blogspot.com/2009/01/tweetrics-lessons-learned-when-setting.html">post</a>, I had briefly talked about how I ran a rake task in the background to accomplish the twitter worker functionality.  After the course of a couple of weeks, I've got a couple of updates to that process, so that hopefully, you'll have an easier time of running a rake task continuously in the background.</p><h3>Use Monit instead of god for monitoring</h3>
+<p>I started with god to monitor my rake task.  It was very easy to setup, almost too easy.  After a couple of weeks, I started to notice that the god process was starting to leak memory all over the place.  I'll qualify this by saying that I use slicehost for hosting tweetrics.  I've seen some messages on the slicehost boards that talk about how god doesn't work well on the VMs.  That being said, I had to switch to something else.  Enter Monit.  I didn't have that much experience using Monit so, I had a learning experience in front me.  I found some instructions on the web on how to install Monit, which were fairly painless.  Within a few minutes, I had everything installed.  Now onto getting the rake tasks setup.</p><h3>Setup the monitrc file</h3>
+<p>The next step in setting up monit to handle my background task was setting up the monit control file.  This is analogous to setting up the configuration file that you'd use with god to handle the monitoring of your processes. I have to admit that the syntax for the monit control file was relatively straight forward.  To make things even easier, I found this <a href="http://www.igvita.com/2006/11/07/monit-makes-mongrel-play-nice/">post</a> from Ilya Grigorik.  I copied the monitrc file and put it in my config directory of my merb project.  Although Ilya's post was directed toward using mongrel with monit, all I needed to do was change the start and stop program lines to something like this:<pre name="code" class="ruby">
+start program = "/path/to/bash/script start"
+stop program  = "/path/to/bash/script stop"</pre>The purpose of these lines are to start an stop the rake tasks, which leads us to the next step.</p>
+
+<h3>Create the bash script to handle the startup of your rake task</h3><p>Since rake tasks are not daemonized and do not create their own pid files, we'll have to set that up.  Time to setup a bash script.  I couldn't do this part without looking through the FAQs on the Monit site, more specifically <a href="http://mmonit.com/wiki/Monit/FAQ#pidfile">what to do to set up a script for processes that don't create pid files</a>.  I'm not the best person when it comes to creating bash scripts, so finding this information in the FAQ was a big help.  Now came the part for creating the rake specific parts:<pre name="code" class="ruby">
+#!/bin/bash
+export PATH=$PATH:/usr/local/lib/site_ruby/1.8/rubygems
+
+case $1 in
+   start)
+      cd /path/to/merb/root/directory;
+      echo $$ > /path/to/log/metrics_gen_master.pid
+      /path/to/rake twitter:metrics_gen MERB_ENV=production
+      ;;
+    stop)
+      kill `cat /path/to/file/metrics_gen.ppid`
+      kill `cat /path/to/file/metrics_gen.pid`
+      kill `cat /path/to/file/metrics_gen_master.pid`
+      rm -rf /path/to/pid/files
+      ;;
+    *)
+      echo "usage: twitter_worker {start|stop}" ;;
+esac
+exit 0</pre><b>Important notes:</b><ul><li><b>In your rake task, make sure that you save the pid and the ppid to a file.</b><pre name="code" class="ruby">
+`echo "#{Process.pid}" > #{Merb.root}/log/metrics_gen.pid`
+`echo "#{Process.ppid}" > #{Merb.root}/log/metrics_gen.ppid`
+</pre><p>This is important because we'll need to stop the rake processes. </p></li>
+<li><b>If you're running monit using init be careful of permissions.</b><p>Since my rake task loaded the merb environment, it would be running as root and would write to merb.main.pid.  If I restarted apache, passenger could not write to the file merb.main.pid and would throw errors instead of running the app.</p></li>
+<li><b>Don't use & when invoking your rake task!</b><p>By using & in the bash script, the rake task will get forked and and the incorrect pid will get written to file.  Trust me, I spent a lot of time on this one.</p></li>
+</ul></p><h3>Run it!</h3><p>Not much I can say here other than take the time to really extensively test your monit script.  The log output can be found at /var/log/monit.log.  Also, make sure you run it with sudo if you are going to use init.</p>

@@ -1,0 +1,17 @@
+---
+layout: post
+title: Errors with Better Nested Set and MySQL
+date: '2007-04-10T09:13:00.001-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2008-11-18T15:46:27.870-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-5889143996159125025
+blogger_orig_url: http://neovintage.blogspot.com/2007/04/errors-with-better-nested-set-and-mysql.html
+---
+
+It looks like theres an error when trying to create nodes for your model that uses the <a href="http://opensource.symetrie.com/trac/better_nested_set/">Better Nested Set</a>.  
+You should get something that looks like this:
+<code>Mysql::Error: #42000You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ....</code>
+Whats happening is that the <tt>:scope</tt> attribute is not getting valued properly.  Instead of one statement coming back, the entire ternary operation statement is getting returned.  
+<p>Not sure if its been patched yet, if not, we'll have to write something to fix that.   I haven't seen anything come across in the mailing lists.  In the meantime, when specifying your <tt>:scope</tt> attributes make sure that you use a string and not a symbol. That seems to work.</p>

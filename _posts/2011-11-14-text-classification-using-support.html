@@ -1,0 +1,23 @@
+---
+layout: post
+title: Text Classification using Support Vector Machines in Ruby
+date: '2011-11-14T13:59:00.001-08:00'
+author: Rimas Silkaitis
+tags:
+- ruby
+- machine learning
+modified_time: '2011-12-11T03:18:49.019-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-6769608546949438597
+blogger_orig_url: http://neovintage.blogspot.com/2011/11/text-classification-using-support.html
+---
+
+<p><a href="http://en.wikipedia.org/wiki/Support_vector_machines">Support Vector Machines</a> represent a group of supervised learning classifiers that will try to predict the outcome of a feature set.  I don't want to bore you with the details but I would recommend that you read Ilya's <a href="http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/">post about SVMs</a>.  It's very informative and it will give you the basics of what you need to understand to get started.</p><p>In my case, I've been working on a fairly large scale text classification problem at work when I realized that SVMs would be perfect for the job.  Unfortunately, for our needs the current state of Ruby support for SVMs wasn't where we needed it to be.<br />
+</p><p>I am happy to introduce <a href="https://github.com/febeling/rb-libsvm">rb-libsvm</a> to the world!<br />
+</p>
+
+<p>While I can't take credit for the entire gem myself, I did help clean up some pieces of the codebase and gemify the code to make it possible to install from Rubygems.  <br /></p>
+
+<p>Basic Usage Example:</p>
+<script src="https://gist.github.com/1460023.js?file=libsvm.rb"></script>
+
+<p>As for the future plans for this gem, one of the biggest features I can think of building would be the Marshaling of the Libsvm::Model object.  This would be a big performance win since you wouldn't have to re-train the classifier.  If you have any other ideas for features, I'd be happy to hear about them.<br /></p>

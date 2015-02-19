@@ -1,0 +1,17 @@
+---
+layout: post
+title: Upgrading to Mongoid Beta 6
+date: '2010-05-18T16:22:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- mongoid
+- quicktip
+- mongodb
+modified_time: '2010-05-18T16:22:16.023-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-2139077545820127688
+blogger_orig_url: http://neovintage.blogspot.com/2010/05/upgrading-to-mongoid-beta-6.html
+---
+
+<p>Just as a quick note, I had upgraded from Mongoid 2.0 Beta 4 to Mongoid 2.0 Beta 6 when I ran into some weird errors like:<br><tt>ActionView::Template::Error (Database should be a Mongo::DB, not NilClass)</tt><br>and<br><tt>Mongoid::Errors::InvalidDatabase: Mongoid::Errors::InvalidDatabase</tt></p>
+
+<p>Essentially, you can keep your Mongoid code the way it is, but you need to put this line of code at the top of your <tt>config/application.rb</tt>:<pre name="code" class="ruby">require 'mongoid/railtie'</pre>I hope that helps someone out there.</p>

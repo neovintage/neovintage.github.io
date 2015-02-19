@@ -1,0 +1,14 @@
+---
+layout: post
+title: Is it possible to do XY Scatter Charts in Gruff?
+date: '2008-05-21T11:23:00.008-07:00'
+author: Rimas Silkaitis
+tags:
+- charts
+modified_time: '2008-12-09T00:31:54.366-08:00'
+thumbnail: http://1.bp.blogspot.com/_7qcbQ5ZcM54/SDRxJovchfI/AAAAAAAAAFM/ljc6xM7aKaQ/s72-c/scatter_basic_small.png
+blogger_id: tag:blogger.com,1999:blog-6201986.post-8426432851249191836
+blogger_orig_url: http://neovintage.blogspot.com/2008/05/is-it-possible-to-do-xy-scatter-charts.html
+---
+
+YES! You Can!  I've <a href="http://github.com/neovintage/gruff/tree/scatter">forked</a> Gruff on github and written some code to give gruff the ability to plot X and Y points on a graph.  Although, I can't take all of the credit for this.  Topfunky started the ball rolling and I just took it a little further.  I'm hoping to get this committed to the main branch soon. <br /><br /><a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://1.bp.blogspot.com/_7qcbQ5ZcM54/SDRxJovchfI/AAAAAAAAAFM/ljc6xM7aKaQ/s1600-h/scatter_basic_small.png"><img style="display:block; margin:0px auto 10px; text-align:center;cursor:pointer; cursor:hand;" src="http://1.bp.blogspot.com/_7qcbQ5ZcM54/SDRxJovchfI/AAAAAAAAAFM/ljc6xM7aKaQ/s400/scatter_basic_small.png" border="0" alt=""id="BLOGGER_PHOTO_ID_5202907879888946674" /></a><h3>Get the Code:</h3>As of this point the code is only in <a href="http://github.com/neovintage/gruff/tree/scatter">my forked github repository</a>.  You'll have to download the code from github and create a gem if you'd like to use it.<br /><br /><pre name='code' class='ruby'>git clone git://github.com/neovintage/gruff.git<br />rake gem</pre><br /><br /><h3>Example:</h3>Let's run through an example of how to create the above chart.  The code will look very similar to the sample provided on <a href="http://nubyonrails.com/pages/gruff">nubyonrails.com</a><br /><pre name='code' class='ruby'>scatter_chart = Gruff::Scatter.new(400)<br />g.title = "Basic Small Scatter Chart Test"<br /><br /># Parameter 1 is the name of the dataset<br /># Parameter 2 is the values for the X-Axis<br /># Parameter 3 is the values for the Y-Axis<br />g.data('Chuck', [20,10,5], [5,10,20])<br />g.data('Brown', [10,12,14,8], [12,6,10,8] )<br />g.data('Lucy', [8,16,8], [8,10,6] )<br /><br />g.write('basic_scatter.png')</pre><br />The only thing that you can't do with the Scatter graph is set labels for the X-Axis.  Maybe that could be a future enhancement. <br /><br />Email me or throw up a comment if you happen to find any bugs in this new graph.

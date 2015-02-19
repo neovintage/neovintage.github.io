@@ -1,0 +1,30 @@
+---
+layout: post
+title: Mongodb Stored Javascript Functions - Ruby Edition
+date: '2010-07-09T11:47:00.000-07:00'
+author: Rimas Silkaitis
+tags:
+- mongodb
+modified_time: '2010-07-12T07:19:11.565-07:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-6437168416716449148
+blogger_orig_url: http://neovintage.blogspot.com/2010/07/mongodb-stored-javascript-functions.html
+---
+
+<p>I was writing a couple of different analytics applications recently.  My applications did two different things but accessed the same database.  I was wondering if there were a way to store javascript functions so that I could share code between two different applications.  That's when I stumbled across the <a href="http://www.mongodb.org/display/DOCS/Server-side+Code+Execution">server side code execution</a> and Mike Dirolf's post on <a href="http://dirolf.com/2010/04/05/stored-javascript-in-mongodb-and-pymongo.html">stored javascript and pymongo</a>.  I was hoping for the same type of functionality in the ruby driver as in pymongo, but alas it wasn't.</p>
+
+<p>In the patch that I submitted to the mongo ruby driver, I added a <a href="http://github.com/mongodb/mongo-ruby-driver/commit/20206bee2b20a5400d1ced1dbc25fcb83aff861b">couple of functions</a> that will allow you to add stored Javascript functions to <tt>system.js</tt> in your database. Let's walk through a use case:<pre class="ruby" name="code"># Assume we're using the mongo driver and db = test
+db = Mongo::Connection.new("localhost").db("test")
+
+# Setup the stored function in MongoDB
+db.add_stored_function("sum", "function (x, y) { return x + y; }")
+
+sites = db.collection("sites")
+sites.insert({:name => "Site 1", :admin_count => 2, :moderator_count => 3})
+sites.find("$where" => "sum(this.admin_count, this.moderator_count) == 5")
+
+# When we don't need the stored function any more
+db.remove_stored_function("sum")
+
+</pre>This is just one example of how to use the stored functions.  Don't forget that you can use them in map/reduce, eval, and $where clauses.</p>
+
+<p>Unlike the pymongo version, I did not create an instance of the <tt>system.js</tt> collection in the db instance.  This would have allowed us to use introspection to actually make method calls instead of having to write out an eval method.  (See how it works for pymongo at the end of Mike's <a href="http://dirolf.com/2010/04/05/stored-javascript-in-mongodb-and-pymongo.html">post</a>.)  In my use cases, I used the stored functions within where and map_reduce calls and didn't really need to use eval.  If other people need it, I could definitely change it up.</p>

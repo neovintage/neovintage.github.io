@@ -1,0 +1,25 @@
+---
+layout: post
+title: Cloning Merb 0.9
+date: '2008-01-28T08:20:00.001-08:00'
+author: Rimas Silkaitis
+tags:
+- merb
+modified_time: '2008-11-11T17:38:58.940-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-1572005798345080151
+blogger_orig_url: http://neovintage.blogspot.com/2008/01/cloning-merb-09.html
+---
+
+Merb 0.9 is going to be officially announced in a couple of weeks at acts_as_conference but for those looking to get a jump start on the action (myself included), you can pull down the latest version from <a href="http://github.com/wycats">github</a>.
+
+If you don't already have git installed, I recommend following these instructions on Ramanan's blog for those that use Mac OS X: <a href="http://funkaoshi.com/blog/building-git-on-mac-os-x"> Building Git on Mac OS X</a>
+
+The next step is to clone the source from github.  Now its important to note that merb has now been split into two parts, merb-core and merb-more.  I'm only going to follow the instructions for merb-core but the same process applies to merb-more. 
+<ol>
+ <li>Clone the merb-core source to your local machine<pre name="code" class="ruby">git clone git://github.com/wycats/merb-core.git</pre>This will create a new folder in your current working directory named 'merb-core'</li>
+ <li>Build the gem
+<pre name="code" class="ruby">cd merb-core/
+rake gem</pre></li>
+ <li>Install<pre name="code" class="ruby">cd pkg/
+gem install merb-core-0.9.0.gem</pre></li>
+</ol>And there you have it.  You're ready to start playing around with the new merb-core!  One quick note, make sure you use merb.9 at the command line instead of merb.

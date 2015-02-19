@@ -1,0 +1,34 @@
+---
+layout: post
+title: Inserting NULL values when trying to create mulitple model objects
+date: '2007-04-08T08:43:00.001-07:00'
+author: Rimas Silkaitis
+tags:
+- rails
+modified_time: '2008-11-18T15:46:40.374-08:00'
+blogger_id: tag:blogger.com,1999:blog-6201986.post-8672594853818952662
+blogger_orig_url: http://neovintage.blogspot.com/2007/04/null-values-and-boolean-fields.html
+---
+
+When creating a new object in Rails and you want the value to result in a NULL value in the database, you typically just have to set the value of the field to nil and you're on your way.  In my situation, I needed to default the value of the Boolean field on the table to NULL if the user did not select a value.  I used a collection select method to allow the user to select "Yes", "No" or to leave the field blank.  Then in the controller I thought that I could just refer to the params[:new_object] and I would be good.  Unfortunately, when creating the new object the value of the field was always getting set to false.  Lets go over how I initially setup my code.  
+
+In the form:
+<code><% form_tag(save_review_reviews_path(@project, @phase), :method => :put, :id => params[:phase_id]) do %>
+  <% @review_points.each_with_index do |rp, index| %>
+    <% fields_for "rp[#{index}]", rp do |f| %>
+      <%= f.collection_select(:compliant, [{"1" => "Yes"}, {"0" => "No"}], :keys, :values, :include_blank => true) -%>
+    <% end %>
+  <% end %>
+<% end %></code>
+In the controller code:
+<code>params[:rp].each_value do |rp|
+  @review.review_points.build(:compliant => rp[:compliant])
+end</code>
+Every time I ran through the tests the value was always getting set to false when the user had left the select box blank.  I tried removing the :include_blank in the collection select and putting another hash for nil, {nil => ""}.  That didn't work either, the value was still getting set to false.  In try number two, I used the code as posted above, and then I tried to default the value of record to NULL through the migration.  That failed as well.  
+
+Finally, I just decided to add an extra step before actually building the record in the controller.  As a result, the action worked as I expected, I was able to insert NULL values.  This is how the controller looks now:
+<code>params[:rp].each_value do |rp|
+  rp[:compliant] = nil if rp[:compliant] == ""
+  @review.review_points.build(:compliant => rp[:compliant])
+end</code>
+Too bad we could just use the params object and automatically default the field to null when creating the object.

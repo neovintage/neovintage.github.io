@@ -1,0 +1,27 @@
+# Dependencies
+markdown:            redcarpet
+highlighter:         pygments
+
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+relative_permalinks: true
+
+# Setup
+title:               neovintage
+tagline:             'by Rimas Silkaitis'
+description:         ''
+url:                 http://neovintage.org
+baseurl:             /
+paginate:            5
+
+# About/contact
+author:
+  name:              Rimas Silkaitis
+  url:               https://twitter.com/neovintage
+  email:             neovintage@gmail.com
+  quora:             http://www.quora.com/Rimas-Silkaitis
+
+# Custom vars
+version:             1.0.0
