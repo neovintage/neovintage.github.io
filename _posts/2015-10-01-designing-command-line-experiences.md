@@ -113,8 +113,29 @@ about it is how easy it is to get started and how it tells you what you need to
 do via documentation. For example, you can go to the ngrok site, download the
 binary, unzip and issue the command `ngrok`. What’s happens next is fantastic, a
 full set of information on what ngrok is, examples of how to use it, version
-numbers and commands get published in the terminal. From a discoverability
-perspective, I know now what ngrok can do and how to get extra help. 
+numbers and commands get published in the terminal:
+
+```
+$ ngrok
+NAME:
+   ngrok - tunnel local ports to public URLs and inspect traffic
+
+DESCRIPTION:
+    ngrok exposes local networked services behinds NATs and firewalls 
+    to the public internet over a secure tunnel. Share local websites,
+    build/test webhook consumers and self-host personal services.
+    Detailed help for each command is available with 'ngrok help
+    <command>'. Open http://localhost:4040 for ngrok's web interface
+    to inspect traffic.
+
+EXAMPLES:
+    ngrok http 80          # secure public URL for port 80 web server
+    ngrok http foo.dev:80  # tunnel to host:port instead of localhost
+    ngrok tcp 22           # tunnel arbitrary TCP traffic to port 22
+....
+```
+
+From a discoverability perspective, I know now what ngrok can do and how to get extra help. 
 
 The second front where documentation can help is on the branding side. How
 thorough are you in your docs? Do you provide examples? Do you tell users where
