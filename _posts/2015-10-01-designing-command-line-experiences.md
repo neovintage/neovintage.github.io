@@ -144,4 +144,4 @@ takes a little bit more:
 While these are the tenants that I follow, I’m sure there’s more out there. If
 you have principles that you swear by when you create command line tools, drop
 me a line, [@neovintage](https://twitter.com/neovintage), or comment over on
-[Hacker News](). 
+[Hacker News](https://news.ycombinator.com/item?id=10314726). 
