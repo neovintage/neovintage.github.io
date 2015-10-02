@@ -148,7 +148,7 @@ has with anything the company produces results in the customer building a
 profile of what that company stands for. Docs are a great way of implicitly
 communicating that value.
 
-## My Tenants of Great Command Line Experiences
+## My Tenets of Great Command Line Experiences
 
 The Unix philosophy is a great starting point for understanding what it takes to
 build good command line experiences. I highly recommend reading through the “Art
@@ -162,7 +162,7 @@ takes a little bit more:
   * Documentation - use it to teach and delight your users on what your tool can
     do.
 
-While these are the tenants that I follow, I’m sure there’s more out there. If
+While these are the tenets that I follow, I’m sure there’s more out there. If
 you have principles that you swear by when you create command line tools, drop
 me a line, [@neovintage](https://twitter.com/neovintage), or comment over on
 [Hacker News](https://news.ycombinator.com/item?id=10314726). 
