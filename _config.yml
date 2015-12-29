@@ -15,6 +15,9 @@ description:         ''
 url:                 http://neovintage.org
 baseurl:             /
 paginate:            5
+sass:
+  sass_dir:          _sass
+  style:             compressed
 
 # About/contact
 author:
