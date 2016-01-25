@@ -5,6 +5,8 @@ date: 2015-01-21 11:10:00
 tags: product
 ---
 
+<img src="/public/images/area-closed-small.jpg" 
+alt="Area Closed Sign" class="illustration"/>
 
 One of the biggest challenges I see product managers face in their career is
 killing features and products. Much of the product management literature and
