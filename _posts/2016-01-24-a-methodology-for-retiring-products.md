@@ -1,7 +1,7 @@
 ---
 layout: post
 title: A Methology for Retiring Products
-date: 2015-01-24 16:05:00
+date: 2016-01-24 12:05:00
 tags: product,sunset
 ---
 
