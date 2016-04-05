@@ -2,6 +2,11 @@
 markdown:            kramdown
 highlighter:         rouge
 gems:                ['jekyll-paginate']
+kramdown:
+  input:              GFM
+  syntax_highlighter: rogue
+
+
 # Permalinks
 #
 permalink:           pretty

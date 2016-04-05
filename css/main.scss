@@ -10,3 +10,20 @@ img.illustration {
 .twitter-tweet {
   margin: 0 auto;
 }
+
+figure {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.highlight pre {
+  width: auto;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.highlight pre code {
+  overflow-x: scroll;
+  white-space: pre;
+  overflow-wrap: normal;
+}
