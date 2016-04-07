@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Data Modeling in Cassandra from a Postgres Perspective
-<!--date: 2016-04-07 10:09:00-->
+date: 2016-04-07 10:09:00
 tags: postgres,cassandra
 ---
 
@@ -14,7 +14,7 @@ For the purposes of this exercise, let's assume that my data model in Postgres h
 
 {% highlight sql %}
 CREATE TABLE users (
-  id BIGSERIAL,
+  id bigserial,
   name text,
   email text,
   encrypted_password text,
@@ -128,7 +128,7 @@ Second, the remaining columns within a primary key definition are used for clust
 
 The syntax for composite primary keys can be fairly complicated but if you only have one column as the primary key, that one column will be used as both the partition key and the clustering column. This double meaning for the primary key in Cassandra is why it’s such a loaded term.
 
-### Eventually Unique
+### Eventually Consistent
 
 I can’t stress enough that the primary keys within Cassandra enforce eventual consistency. Unlike Postgres primary keys, eventual consistency could lead to unexpected results with your data. Let’s walk through a contrived scenario to understand what could happen. Imagine that I have a table in my production keyspace that tracks the amount of hits a page on my site gets. Again, this is contrived and not something you’d actually set up in a schema, this is only to illustrate eventual consistency:
 
