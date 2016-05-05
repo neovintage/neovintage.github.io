@@ -89,7 +89,7 @@ SELECT category
  GROUP BY 1
 ```
 
-| category | always_express |
+| category | ever_expressed |
 | -------- | -------------- |
 | food     | t              | 
 | shoes    | t              | 
@@ -124,3 +124,5 @@ Keep this behavior in mind when you're querying and there is possibility of null
 ## Wrapping Up
 
 I hope you found the `bool_or` and `bool_and` functions as useful as I have. Any time you find yourself starting your analysis with `does any` or `do all` then checkout these functions. If you have other instances where you use these functions, let me know via [twitter](https://twitter.com/neovintage) or [email](mailto:neovintage@gmail.com), I'd love to hear more.
+
+*Edit: Thanks to [@epc](https://twitter.com/epc) and [@floatingatoll](https://twitter.com/floatingatoll) for pointing out a small mistake on one of my headings on the query output. Fixed!*
