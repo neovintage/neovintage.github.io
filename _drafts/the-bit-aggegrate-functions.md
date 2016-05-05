@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Seldomly Used SQL: bool Aggregate Functions"
+date: 2016-05-04 08:01:00
 tags: postgres,aggregation
 ---
 
@@ -36,10 +37,10 @@ The best way I've found to explore these concepts is with some example usage. Le
 
 ```sql
 CREATE TABLE orders (
-	id BIGSERIAL,
-	customer_id BIGINT,
-	category TEXT,
-	express_delivery BOOLEAN 
+  id BIGSERIAL,
+  customer_id BIGINT,
+  category TEXT,
+  express_delivery BOOLEAN 
 );
 ```
 
