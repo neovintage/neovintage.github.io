@@ -5,7 +5,7 @@ title: Talks
 
 ### Upcoming Talks
 
-None yet. Email me if you want to come speak at your event.
+None yet.
 
 ### Past Talks
 
