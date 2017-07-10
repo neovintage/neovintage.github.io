@@ -1,8 +1,6 @@
 ---
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
-@charset "utf-8";
-
 img.illustration {
   margin: 0 auto;
 }
@@ -26,4 +24,13 @@ figure {
   overflow-x: scroll;
   white-space: pre;
   overflow-wrap: normal;
+}
+
+.principles  {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+
+  li {
+    margin-bottom: 10px;
+  }
 }
