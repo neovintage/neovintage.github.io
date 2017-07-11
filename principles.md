@@ -3,7 +3,7 @@ layout: page
 title: Principles
 ---
 
-If you haven't had a chance to read it, I would recommend checking out the [The Product Manifesto]() written by Marty Cagan at the Silicon Valley Product Group. Marty defines a manifesto as a public declartion of principles, beliefs, and intentions. His definition of Manifesto is specific to the products being worked on as part of the team which can ultimately define the product strategy. Using the same approach to a personal set of principles allows me to articulate how I approach product, the experiences I want to create for customers and the teams I want to build product with. As a product person, my principles should be malleable and evolve over time.
+If you haven't had a chance to read it, I would recommend checking out the [The Product Manifesto](http://svpg.com/the-product-manifesto/) written by Marty Cagan at the Silicon Valley Product Group. Marty defines a manifesto as a public declartion of principles, beliefs, and intentions. His definition of Manifesto is specific to the products being worked on as part of the team which can ultimately define the product strategy. Using the same approach to a personal set of principles allows me to articulate how I approach product, the experiences I want to create for customers and the teams I want to build product with. As a product person, my principles should be malleable and evolve over time.
 
 ## On Product
 
